@@ -53,9 +53,10 @@ public class Transaction {
   /**
    * Adds a nez signature from a Tangem card to this transaction
    * @param sig bytes array sent by the Tangem SDK
+   * @param key address of the account used to compute the hint
    */
-  public void tangemSign(byte[] sig) {
-    KeyPair sourceKp = KeyPair.fromAccountId(this.mSourceAccount);
+  public void tangemSign(byte[] sig, String key) {
+    KeyPair sourceKp = KeyPair.fromAccountId(key);
 
     PublicKey publicKey = new PublicKey();
     publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
