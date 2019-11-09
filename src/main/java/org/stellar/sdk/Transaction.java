@@ -51,6 +51,39 @@ public class Transaction {
   }
 
   /**
+   * Adds a nez signature from a Tangem card to this transaction
+   * @param sig bytes array sent by the Tangem SDK
+   */
+  public void tangemSign(byte[] sig) {
+    KeyPair sourceKp = KeyPair.fromAccountId(this.mSourceAccount);
+
+    PublicKey publicKey = new PublicKey();
+    publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
+    Uint256 uint256 = new Uint256();
+    uint256.setUint256(sourceKp.getPublicKey());
+    publicKey.setEd25519(uint256);
+
+    SignatureHint signatureHint = new SignatureHint();
+    try {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      PublicKey.encode(new XdrDataOutputStream(byteArrayOutputStream), publicKey);
+      byte[] byteArray = byteArrayOutputStream.toByteArray();
+      byte[] copyOfRange = Arrays.copyOfRange(byteArray, byteArray.length - 4, byteArray.length);
+      signatureHint.setSignatureHint(copyOfRange);
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+
+    Signature signature = new Signature();
+    signature.setSignature(sig);
+    DecoratedSignature decoratedSignature = new DecoratedSignature();
+    decoratedSignature.setHint(signatureHint);
+    decoratedSignature.setSignature(signature);
+
+    this.mSignatures.add(decoratedSignature);
+  }
+
+  /**
    * Adds a new signature ed25519PublicKey to this transaction.
    * @param signer {@link KeyPair} object representing a signer
    */
