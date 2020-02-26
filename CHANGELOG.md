@@ -2,6 +2,33 @@
 
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
+## 0.14.0
+
+* Update challenge transaction helpers for SEP-10 v1.3.0 (https://github.com/stellar/java-stellar-sdk/issues/263).
+* Add support for /accounts end-point with ?signer and ?asset filters (https://github.com/stellar/java-stellar-sdk/issues/261).
+* Add support for /offers end-point with query parameters (https://github.com/stellar/java-stellar-sdk/issues/261).
+* Regenerate the XDR definitions to include MetaV2 support (https://github.com/stellar/java-stellar-sdk/issues/261).
+
+## 0.13.0
+
+* Horizon v0.24.0 added a `fee_charged` and `max_fee` object with information about max bid and actual fee paid for each transaction.
+* We are removing ``*_all_accepted_fee` fields in favor of the new keys, making it easier for people to understand the meaning the fields.
+
+## 0.12.0
+
+* Represent memo text contents as bytes because a memo text may not be valid UTF-8 string (https://github.com/stellar/java-stellar-sdk/issues/257).
+* Validate name length when constructing org.stellar.sdk.ManageDataOperation instances.
+* Validate home domain length when constructing org.stellar.sdk.SetOptionsOperation instances.
+
+## 0.11.0
+
+* Fix bug in `org.stellar.sdk.requests.OperationsRequestBuilder.operation(long operationId)`. The method submitted an HTTP request to Horizon with the following path, /operation/<id> , but the correct path is /operations/<id>
+* Rename `org.stellar.sdk.requests.PathsRequestBuilder` to `org.stellar.sdk.requests.StrictReceivePathsRequestBuilder`
+* Add `sourceAssets()` to `org.stellar.sdk.requests.StrictReceivePathsRequestBuilder` which allows a list of assets to be provided instead of a source account
+* Add `org.stellar.sdk.requests.StrictSendPathsRequestBuilder` which is the request builder for the /paths/strict-send endpoint
+* Removed deprecated classes: `org.stellar.sdk.PathPaymentOperation` and `org.stellar.sdk.responses.operations.PathPaymentOperationResponse`
+* The `fee_paid` field in the Horizon transaction response will be removed when Horizon 0.25 is released. The `fee_paid` field has been replaced by `max_fee`, which defines the maximum fee the source account is willing to pay, and `fee_charged`, which defines the fee that was actually paid for a transaction. Consequently, `getFeePaid()` has been removed from `org.stellar.sdk.responses.Transaction` and has been replaced with `getMaxFee()` and `getFeeCharged()`.
+
 ## 0.10.0
 
 ### Deprecations
